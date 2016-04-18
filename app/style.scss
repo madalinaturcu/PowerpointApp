@@ -1,0 +1,251 @@
+$color-red: #e05038;
+$color-yellow: #e6af4b;
+$color-white: #f2efe8;
+$color-black: #334431;
+$color-blue: #c2d4d8;
+$color-green: #dbe9d8;
+$color-purple: #b0aac2;
+
+body {
+	margin: 0;
+	background-color: $color-white;
+}
+
+.content {
+	display: flex;
+	width: 800px;
+	height: 800px;
+}
+
+.site-name {
+	margin: 0;
+	color: $color-white;
+	text-align: center;
+	background-color: $color-purple;
+	padding: 10px 0;
+}
+
+#type-of-slides {
+	background-color: $color-green;
+	width: 100%;
+	height: 160px;
+	display: inline-block;
+} 
+
+.all-type-slides {
+	padding-top: 10px;
+}
+
+.type-slide {
+	background-color: $color-blue;
+	width: 100px;
+	height: 80px;
+	margin: 0 auto;
+
+	p {
+		width: 80px;
+		margin-top: 10px;
+		margin-left: 8px;
+		text-align: center;
+		color: $color-black;
+		background-color: white;
+	}
+}
+
+.type-title {
+	@extend .type-slide;
+	float: left;
+	margin-left: 30px;
+}
+
+.type-content {
+	@extend .type-slide;
+	margin-top: -10px;
+
+	textarea {
+		width: 80px;
+		margin-top: 10px;
+		margin-left: 8px;
+		height: 20px;
+		text-align: center;
+	}
+}
+
+.type-img {
+	@extend .type-slide;
+	margin-top: -80px;
+	float: right;
+	margin-right: 30px;
+
+	.slide-img {
+	  width: 84px;
+    margin-left: 8px;
+    margin-top: 5px;
+    height: 30px;
+    background-color: white;
+   }
+}
+
+
+
+.text-img {
+	margin-top: 30px;
+  height: 70px;
+  margin-left: 25px;
+  width: 180px;
+
+  &:focus {
+  	outline: none;
+  }
+}
+
+// #title-slide {
+// 	@extend .slide-box;
+
+//   button {
+//   	@extend .button;
+//   }
+
+// 	input {
+// 		@extend .input;
+// 	}
+// }
+
+// #content-slide {
+// 	@extend .slide-box;
+// 	margin-top: 40px;
+
+// 	button {
+//   	@extend .button;
+//   }
+
+//   input {
+//   	@extend .input;
+//   }
+
+//   textarea {
+//   	@extend .text-img;
+//   }
+// }
+
+// #image-slide {
+// 	@extend .slide-box;
+// 	margin-top: 40px;
+
+// 	button {
+// 		@extend .button;
+// 	}
+
+// 	input {
+// 		@extend .input;
+// 	}
+
+// 	.slide-img {
+// 		@extend .text-img;
+// 		background-color: white;
+// 	}
+// }
+
+
+.slide-box {
+  background-color: $color-green;
+	margin-left: 10px;
+	width: 180px;
+	height: 180px;
+}
+
+.button {
+  background: #900;
+  border: none;
+  color: white;
+  float: right;
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+.input {
+	margin-top: 40px;
+	width: 150px;
+  height: 25px;
+  margin-left: 12px;
+  border: 1px solid $color-red;
+
+  &:focus {
+  	outline: none;
+  }
+}
+
+.textarea {
+	margin-top: 20px;
+	width: 150px;
+  height: 55px;
+  margin-left: 12px;
+  border: 1px solid $color-red;
+
+  &:focus {
+  	outline: none;
+  }
+}
+
+.image {
+	margin-top: 20px;
+	width: 150px;
+  height: 55px;
+  margin-left: 12px;
+}
+
+#overview-slides {
+	background-color: $color-blue;
+	height: 790px;
+	width: 200px;
+	padding-top: 20px;
+}
+
+.overview-slide-title {
+	@extend .slide-box;
+
+	button {
+		@extend .button;
+	}
+	input {
+		@extend .input;
+	}
+}
+
+.overview-slide-content {
+	@extend .slide-box;
+	margin-top: 20px;
+	button {
+		@extend .button;
+	}
+	input {
+		@extend .input;
+	}
+	textarea {
+		@extend .textarea;
+	}
+}
+
+.overview-slide-image {
+	@extend .slide-box;
+	margin-top: 20px;
+	button {
+		@extend .button;
+	}
+	input {
+		@extend .input;
+	}
+	img {
+		@extend .image;
+		border: 1px solid $color-red;
+	}
+}
+
+#detail-slides {
+	width: 50%;
+	height: 50%;
+	background-color: red;
+	margin-top: 40px;
+	margin-left: 40px;
+
+}
