@@ -6,6 +6,9 @@ $color-blue: #c2d4d8;
 $color-green: #dbe9d8;
 $color-purple: #b0aac2;
 
+.display-none {
+	display: none;
+}
 body {
 	margin: 0;
 	background-color: $color-white;
@@ -181,6 +184,8 @@ body {
   height: 55px;
   margin-left: 12px;
   border: 1px solid $color-red;
+  font-size: 20px;
+  text-align: center;
 
   &:focus {
   	outline: none;
@@ -203,7 +208,8 @@ body {
 
 .overview-slide-title {
 	@extend .slide-box;
-
+	margin-top: 20px;
+	
 	button {
 		@extend .button;
 	}
@@ -244,8 +250,24 @@ body {
 #detail-slides {
 	width: 50%;
 	height: 50%;
-	background-color: red;
+	background-color: #D8D8D8;
 	margin-top: 40px;
 	margin-left: 40px;
 
+}
+
+.detail-title-slide {
+	input {
+		width: 300px;
+		height: 50px;
+		margin-top: 150px;
+		margin-left: 50px;
+		font-size: 20px;
+  	text-align: center;
+  	border: none;
+
+  	&:focus {
+  	outline: none;
+  }
+	}
 }
