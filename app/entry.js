@@ -4,65 +4,13 @@ var update = require('react-addons-update');
 
 var selectSlide = {};
 
-var storedSlides = [
-	{
-		id: 1,
-		type: 'Title',
-		title : 'Title1'
-	},
-	{
-		id: 2,
-		type: 'Content',
-		title: 'Title2',
-		content : 'Content'
-	},
-	{
-		id: 3,
-		type: 'Image',
-		title: 'Title3',
-		content : 'http://ict-rev.ecml.at/Portals/1/images/Inventory/Powerpoint.png'
-	},
-	{
-		id: 4,
-		type: 'Title',
-		title : 'Title4'
-	},
-	{
-		id: 5,
-		type: 'Image',
-		title : 'Title5',
-		content : 'http://www.softsolutionworks.com/images/microsoft-logo.png'
-	},
-];
-
 
 //typeSlide
 var TitleSlide = React.createClass ({
 
-	getInitialState: function () {
-	    return {
-	    	addNewSlide: ''      
-	    };
-	},
-
-	addNewSlide: function () {
-		ReactDOM.render(<OverviewTitleSlide />, document.getElementById('overview-slides'));
-		// console.log(this.props.data);
-		// var newStoredSlides = this.props.data.slice();	//copy array
-	  
-	 //  newSlide = {
-		// 	id: 100,
-		// 	type: 'Title',
-		// 	content: 'super'
-		// };
-
-	 //  newStoredSlides.push(newSlide);
-
-	 //  this.setState({data: newStoredSlides});
-	},
 	render: function () {
 		return (
-			<div className="type-title"> 
+			<div className="type-title" onClick={this.props.addSlide}> 
 				<p> Title </p>
 			</div>
 		);
@@ -72,19 +20,9 @@ var TitleSlide = React.createClass ({
 
 var ContentSlide = React.createClass ({
 
-	getInitialState: function () {
-	    return {
-	    	addNewSlide: ''      
-	    };
-	},
-
-	addNewSlide: function () {
-
-		ReactDOM.render(<OverviewContentSlide />, document.getElementById('overview-slides'));
-	},
 	render: function () {
 		return (
-			<div onClick= { this.addNewSlide } className = 'type-content'> 
+			<div  className = 'type-content' onClick={this.props.addSlide}> 
 				<p> Title </p>
 				<p> Content </p>
 			</div>
@@ -94,19 +32,10 @@ var ContentSlide = React.createClass ({
 
 
 var ImageSlide = React.createClass ({
-	getInitialState: function () {
-	    return {
-	    	addNewSlide: ''      
-	    };
-	},
 
-	addNewSlide: function () {
-
-		ReactDOM.render(<OverviewImageSlide />, document.getElementById('overview-slides'));
-	},
 	render: function () {
 		return (
-			<div onClick= { this.addNewSlide } className = 'type-img'>
+			<div className = 'type-img' onClick={this.props.addSlide}>
 				<p> Title </p>
 				<p className = 'slide-img' > Image </p> 
 			</div>
@@ -117,32 +46,46 @@ var ImageSlide = React.createClass ({
 
 var Slides = React.createClass ({
 
-	addSlide: function () {
-		console.log(this.props.data);
-		var newStoredSlides = this.props.data.slice();	//copy array
-	  
-	  var newSlide = {
-			id: 100,
-			type: 'Title',
-			content: 'super'
+	addNewTitleSlide: function() {
+		var titleSlide = {
+				id: Math.random(),
+				type: 'Title',
+				title : 'Title10'
 		};
 
-	  newStoredSlides.push(newSlide);
-	  console.log(newStoredSlides);
-	  this.setState({data: newStoredSlides});
-
-	  console.log(this.props.allOverviewSlides);
-	  
+		this.props.onAddNewSlide(titleSlide);
 	},
+	addNewContentSlide: function() {
+		var contentSlide = {
+				id: Math.random(),
+				type: 'Content',
+				title: 'Title10',
+				content : 'Content10'
+		};
+
+		this.props.onAddNewSlide(contentSlide);
+	},
+	addNewImageSlide: function() {
+		var imageSlide = {
+				id: Math.random(),
+				type: 'Image',
+				title: 'Title10',
+				content : 'http://ict-rev.ecml.at/Portals/1/images/Inventory/Powerpoint.png'
+		};
+
+		this.props.onAddNewSlide(imageSlide);
+	},
+
 	render: function () {
+
 		return (
-			<div>
+			<div id="type-of-slides">
 				<div>
-					<h1 className = 'site-name' onClick= {this.addSlide}> Powerpoint </h1>	
+					<h1 className = 'site-name' onClick= {this.props.onAddNewSlide}> Powerpoint </h1>	
 					<div className = 'all-type-slides'>
-						<TitleSlide />
-						<ContentSlide />
-						<ImageSlide />
+						<TitleSlide addSlide={this.addNewTitleSlide}/>
+						<ContentSlide addSlide={this.addNewContentSlide}/>
+						<ImageSlide addSlide={this.addNewImageSlide}/>
 					</div>
 				</div>
 				<div>
@@ -153,33 +96,17 @@ var Slides = React.createClass ({
 	}
 });
 
-ReactDOM.render(<Slides data={storedSlides}/>, document.getElementById('type-of-slides'));
+// ReactDOM.render(<Slides data={storedSlides}/>, document.getElementById('type-of-slides'));
 
 
 //overviewSlide 
 var OverviewTitleSlide = React.createClass ({
-	getInitialState: function () {
-	    return {
-	    	deleteSlide: ''      
-	    };
+	selectTitleSlideOverview: function(){
+		this.props.select(this.props.id);
 	},
-
-	 //deleteSlide: function (id) {
-	// 	var slideToDelete = document.getElementsByClassName('overview-slide-title')[0];
-	// 	slideToDelete.className = 'display-none';
-
-		// console.log(this.props.data);
-
-		// var newStoredSlides = this.props.data.slice();	//copy array
-	 //  newStoredSlides.push(id, 1);
-	 //  console.log(newStoredSlides);
-	 //  this.setState({data: newStoredSlides});
-
-	 //  console.log(this.props.data);
-	//},
 	render: function () {
 		return (
-			<div className="overview-slide-title"> 
+			<div className="overview-slide-title" onClick={this.selectTitleSlideOverview}> 
 				<button > x </button>
 				<p>  {this.props.title} </p>
 			</div>
@@ -188,23 +115,12 @@ var OverviewTitleSlide = React.createClass ({
 });
 
 var OverviewContentSlide = React.createClass ({
-	getInitialState: function () {
-	    return {
-	    	deleteSlide: ''      
-	    };
-	},
-
-	deleteSlide: function () {
-		// console.log(event);
-		// var value = event.target;
-		// console.log('value: ' + value);
-
-		var slideToDelete = document.getElementsByClassName('overview-slide-content')[0];
-		slideToDelete.className = 'display-none';
+	selectContentSlideOverview: function(){
+		this.props.select(this.props.id);
 	},
 	render: function () {
 		return (
-			<div className="overview-slide-content"> 
+			<div className="overview-slide-content" onClick={this.selectContentSlideOverview}> 
 				<button onClick = {this.deleteSlide }> x </button>
 				<p> {this.props.title} </p>
 				<p className="overview-slide-textarea"> {this.props.content}</p>
@@ -214,26 +130,12 @@ var OverviewContentSlide = React.createClass ({
 });
 
 var OverviewImageSlide = React.createClass ({
-
-	getInitialState: function () {
-	    return {
-	    	deleteSlide: ''      
-	    };
-	},
-
-	deleteSlide: function () {
-		console.log(event);
-		var value = event;
-		console.log('value: ' + value);
-
-
-		var slideToDelete = document.getElementsByClassName('overview-slide-image')[0];
-		slideToDelete.className = 'display-none';
+	selectImageSlideOverview: function(){
+		this.props.select(this.props.id);
 	},
 	render: function () {
-
 		return (
-			<div className="overview-slide-image"> 
+			<div className="overview-slide-image" onClick={this.selectImageSlideOverview}> 
 				<button onClick = {this.deleteSlide }> x </button>
 				<p className="overview-slide-input"> {this.props.title}</p>
 				<img src={this.props.content} />
@@ -245,69 +147,46 @@ var OverviewImageSlide = React.createClass ({
 
 
 var OverviewSlides = React.createClass ({
-
-	selectSlide : function(){
-		alert('');
-	},
-
-	deleteSlide: function (id) {
-		var slideToDelete = document.getElementsByClassName('overview-slide-title')[0];
-		slideToDelete.className = 'display-none';
-
-		console.log(this.props.data);
-
-		var newStoredSlides = this.props.data.slice();	//copy array
-	  newStoredSlides.push(id, 1);
-	  console.log(newStoredSlides);
-	  this.setState({data: newStoredSlides});
-
-	  console.log(this.props.data);
-
-	},
-
 	render: function () {
-
+		var that = this;
 		var allOverviewSlides = this.props.data.map(function(slide){
 			if(slide.type === 'Title') {
-				return( < OverviewTitleSlide  key = {slide.id} title = {slide.title} /> );
+				return( < OverviewTitleSlide  key = {slide.id} id={slide.id} title = {slide.title} select={that.props.selectSlide}/> );
 			} else 
 			if(slide.type === 'Content') {
-				return(<OverviewContentSlide key = {slide.id} title = {slide.title} content = {slide.content} /> );
+				return(<OverviewContentSlide key = {slide.id} id={slide.id} title = {slide.title} content = {slide.content} select={that.props.selectSlide} /> );
 			} else {
-				return(<OverviewImageSlide key = {slide.id} title = {slide.title} content = {slide.content}/> );
+				return(<OverviewImageSlide key = {slide.id} id={slide.id} title = {slide.title} content = {slide.content} select={that.props.selectSlide} /> );
 			}
 		});
 
 		return (
-			<div >
-				{ allOverviewSlides }
+			<div id="overview-slides">
+				{allOverviewSlides }
 			</div>
 		);
 	}
 });
 
-ReactDOM.render(<OverviewSlides data={storedSlides}/>, document.getElementById('overview-slides'));
+// ReactDOM.render(<OverviewSlides data={storedSlides}/>, document.getElementById('overview-slides'));
 
 //detailSlide
 
 var DetailsTitleSlide = React.createClass ({
 
 	getInitialState: function () {
-	    return {
-	    	addSlideInfo: ''      
-	    };
+	    return {title: this.props.slide.title, id: this.props.slide.id};
 	},
 
-	addSlideInfo: function () {
-		// var inputTitle = {this.props.title};
-		// var inputTitle = document.getElementsByTagName('input').value;
-		console.log(inputTitle);
+	handleChange: function(event){
+		this.setState({title: event.target.value});
+		this.props.editSlide(this.state);
 	},
 
 	render: function () {
 		return (
-			<div onClick = {this.addSlideInfo } className="detail-title-slide">
-				<input placeholder="Enter title"/>
+			<div className="detail-title-slide">
+				<input placeholder="Enter title" value={this.state.title} onChange={this.handleChange} />
 			</div>
 		);
 	}
@@ -329,7 +208,7 @@ var DetailsContentSlide = React.createClass ({
 
 	render: function () {
 		return (
-			<div onClick = {this.addSlideInfo } className="detail-content-slide">
+			<div className="detail-content-slide">
 				<input placeholder="Enter title"/>
 				<textarea placeholder="Enter content" />
 			</div>
@@ -353,7 +232,7 @@ var DetailsImageSlide = React.createClass ({
 
 	render: function () {
 		return (
-			<div onClick = {this.addSlideInfo } className="detail-content-slide">
+			<div className="detail-content-slide">
 				<input placeholder="Enter title"/>
 				<img src='' />
 			</div>
@@ -363,15 +242,85 @@ var DetailsImageSlide = React.createClass ({
 
 var DetailsSlides = React.createClass ({
 	render: function () {
-		var selectedSilde;
+		var detailsSlideType;
+		if(this.props.selectedSlide.type === 'Title'){
+			detailsSlideType = <DetailsTitleSlide slide={this.props.selectedSlide} editSlide={this.props.editSlide}/>;
+		} 
+		if (this.props.selectedSlide.type === 'Content') {
+			detailsSlideType = <DetailsContentSlide editSlide={this.props.editSlide} />;
+		} 
+		if (this.props.selectedSlide.type === 'Image') {
+			detailsSlideType = <DetailsImageSlide editSlide={this.props.editSlide} />;
+		}
 
 		return (
-			<div>
-
-				<DetailsContentSlide />
+			<div id="detail-slides">
+				{detailsSlideType}
 			</div>
 		);
 	}
 });
 
-ReactDOM.render(<DetailsSlides />, document.getElementById('detail-slides'));
+// ReactDOM.render(<DetailsSlides />, document.getElementById('detail-slides'));
+
+
+var App = React.createClass ({
+
+	getInitialState: function() {
+		return {
+			data: [
+				{
+					id: 1,
+					type: 'Title',
+					title : 'Title1'
+				}
+			],
+			selectedSlide : {}
+		};
+	},
+
+	addNewSlide: function(slideType) {
+		this.state.data.push(slideType);
+		this.setState({data: this.state.data});
+	},
+
+	selectSlide: function(slideId) {
+		var selectedSlide = this.state.data.filter(function(slide){
+			if(slide.id == slideId) return slide;
+		})[0];
+		this.setState({selectedSlide : selectedSlide});
+	},
+	deleteSlide: function(slideId){
+
+	},
+	editSlide: function(editedSlide){
+			var positionInArray;
+			for(var i = 0; i < this.state.data.length; i++){
+				if(this.state.data[i].id === editedSlide.id){
+					positionInArray = i;
+				}
+			}
+
+			this.state.data[positionInArray].title = editedSlide.title;
+			this.setState({data: this.state.data});
+			// sa schimb obiectul din array
+			// care are id-ul egal cu editedSlide.id
+			// this.state.data[x] = editedSlide
+	},
+	render: function() {
+		
+
+		return (
+			<div>
+				<Slides onAddNewSlide = {this.addNewSlide} />
+				<div className="content">
+					<OverviewSlides data={this.state.data} selectSlide={this.selectSlide}/>
+					<DetailsSlides selectedSlide={this.state.selectedSlide} editSlide={this.editSlide}/>
+				</div>
+
+			</div>
+		);
+	}
+});
+
+ReactDOM.render(<App />, document.body);
