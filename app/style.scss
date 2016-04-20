@@ -44,6 +44,7 @@ body {
 	width: 100px;
 	height: 80px;
 	margin: 0 auto;
+	cursor: pointer;
 
 	p {
 		width: 80px;
@@ -88,8 +89,6 @@ body {
     background-color: white;
    }
 }
-
-
 
 .text-img {
 	margin-top: 30px;
@@ -153,8 +152,9 @@ body {
 .slide-box {
   background-color: $color-green;
 	margin-left: 10px;
+	padding-top: 40px;
 	width: 180px;
-	height: 180px;
+	height: 140px;
 }
 
 .button {
@@ -162,23 +162,21 @@ body {
   border: none;
   color: white;
   float: right;
-  margin-top: 5px;
+  margin-top: -35px;
   margin-right: 5px;
+  cursor: pointer;
 }
 
-.input {
-	margin-top: 40px;
+.overview-slide-input {
 	width: 150px;
   height: 25px;
   margin-left: 12px;
   border: 1px solid $color-red;
-
-  &:focus {
-  	outline: none;
-  }
+  text-align: center;
+  padding-top: 4px;
 }
 
-.textarea {
+.overview-slide-textarea {
 	margin-top: 20px;
 	width: 150px;
   height: 55px;
@@ -186,14 +184,10 @@ body {
   border: 1px solid $color-red;
   font-size: 20px;
   text-align: center;
-
-  &:focus {
-  	outline: none;
-  }
 }
 
 .image {
-	margin-top: 20px;
+
 	width: 150px;
   height: 55px;
   margin-left: 12px;
@@ -202,8 +196,9 @@ body {
 #overview-slides {
 	background-color: $color-blue;
 	height: 790px;
-	width: 200px;
+	width: 230px;
 	padding-top: 20px;
+	overflow-y: scroll;
 }
 
 .overview-slide-title {
@@ -213,8 +208,8 @@ body {
 	button {
 		@extend .button;
 	}
-	input {
-		@extend .input;
+	p {
+		@extend .overview-slide-input;
 	}
 }
 
@@ -224,11 +219,11 @@ body {
 	button {
 		@extend .button;
 	}
-	input {
-		@extend .input;
+	p {
+		@extend .overview-slide-input;
 	}
-	textarea {
-		@extend .textarea;
+	.overview-slide-textarea {
+		@extend .overview-slide-textarea;
 	}
 }
 
@@ -268,6 +263,39 @@ body {
 
   	&:focus {
   	outline: none;
-  }
+  	}
+	}
+}
+
+.detail-content-slide {
+	input {
+		width: 300px;
+		height: 50px;
+		margin-top: 100px;
+		margin-left: 50px;
+		font-size: 20px;
+  	text-align: center;
+  	border: none;
+  	font-family: Arial;
+
+  	&:focus {
+  	outline: none;
+  	}
+	}
+
+	textarea {
+		width: 300px;
+		height: 150px;
+		margin-top: 40px;
+		margin-left: 50px;
+		font-size: 20px;
+  	text-align: center;
+  	border: none;
+  	font-family: Arial;
+  	padding-top: 30px;
+
+  	&:focus {
+  	outline: none;
+  	}
 	}
 }

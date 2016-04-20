@@ -45,8 +45,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	__webpack_require__(167);
-	module.exports = __webpack_require__(168);
+	__webpack_require__(169);
+	module.exports = __webpack_require__(170);
 
 
 /***/ },
@@ -57,55 +57,34 @@
 
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(33);
-
-	var slidesInfo = {
-		title: 'slide title',
-		content: 'slide content',
-		image: 'http://www.codeproject.com/KB/GDI-plus/ImageProcessing2/img.jpg'
-	};
+	var update = __webpack_require__(167);
 
 	var selectSlide = {};
 
 	var storedSlides = [{
-		key: 1,
+		id: 1,
 		type: 'Title',
-		content: 'titlu'
+		title: 'Title1'
 	}, {
-		key: 2,
+		id: 2,
 		type: 'Content',
-		content: 'continut'
+		title: 'Title2',
+		content: 'Content'
 	}, {
-		key: 3,
+		id: 3,
 		type: 'Image',
-		content: 'imagine'
+		title: 'Title3',
+		content: 'http://ict-rev.ecml.at/Portals/1/images/Inventory/Powerpoint.png'
 	}, {
-		key: 4,
+		id: 4,
 		type: 'Title',
-		content: 'imagine'
+		title: 'Title4'
+	}, {
+		id: 5,
+		type: 'Image',
+		title: 'Title5',
+		content: 'http://www.softsolutionworks.com/images/microsoft-logo.png'
 	}];
-
-	// var Slide = React.createClass ({
-
-	// 	getDefaultProps: function () {
-	// 	    return {
-	// 	    	title: 'No title.',
-	// 	    	content: 'No content.',
-	// 	    	image: ''     
-	// 	    };
-	// 	},
-
-	// 	render: function () {
-	// 		return (
-	// 			<div className="overview-slide-title">
-	// 				<button> x </button>
-	// 				<input type="text" value = { this.props.title }/>
-	// 			</div>
-	// 		);
-	// 	}
-
-	// });
-
-	// ReactDOM.render(<Slide />, document.getElementById('overview-slides'));
 
 	//typeSlide
 	var TitleSlide = React.createClass({
@@ -114,19 +93,29 @@
 
 		getInitialState: function getInitialState() {
 			return {
-				data: slidesInfo,
 				addNewSlide: ''
 			};
 		},
 
 		addNewSlide: function addNewSlide() {
-
 			ReactDOM.render(React.createElement(OverviewTitleSlide, null), document.getElementById('overview-slides'));
+			// console.log(this.props.data);
+			// var newStoredSlides = this.props.data.slice();	//copy array
+
+			//  newSlide = {
+			// 	id: 100,
+			// 	type: 'Title',
+			// 	content: 'super'
+			// };
+
+			//  newStoredSlides.push(newSlide);
+
+			//  this.setState({data: newStoredSlides});
 		},
 		render: function render() {
 			return React.createElement(
 				'div',
-				{ onClick: this.addNewSlide, className: 'type-title' },
+				{ className: 'type-title' },
 				React.createElement(
 					'p',
 					null,
@@ -135,7 +124,7 @@
 			);
 		}
 	});
-	// ReactDOM.render(<OverviewSlides />, document.getElementById('overview-slides'));
+	//ReactDOM.render(<OverviewSlides data={storedSlides}/>, document.getElementById('overview-slides'));
 
 	var ContentSlide = React.createClass({
 		displayName: 'ContentSlide',
@@ -143,7 +132,6 @@
 
 		getInitialState: function getInitialState() {
 			return {
-				data: slidesInfo,
 				addNewSlide: ''
 			};
 		},
@@ -175,7 +163,6 @@
 
 		getInitialState: function getInitialState() {
 			return {
-				data: slidesInfo,
 				addNewSlide: ''
 			};
 		},
@@ -206,27 +193,52 @@
 		displayName: 'Slides',
 
 
+		addSlide: function addSlide() {
+			console.log(this.props.data);
+			var newStoredSlides = this.props.data.slice(); //copy array
+
+			var newSlide = {
+				id: 100,
+				type: 'Title',
+				content: 'super'
+			};
+
+			newStoredSlides.push(newSlide);
+			console.log(newStoredSlides);
+			this.setState({ data: newStoredSlides });
+
+			console.log(this.props.allOverviewSlides);
+		},
 		render: function render() {
 			return React.createElement(
 				'div',
 				null,
 				React.createElement(
-					'h1',
-					{ className: 'site-name' },
-					' Powerpoint '
+					'div',
+					null,
+					React.createElement(
+						'h1',
+						{ className: 'site-name', onClick: this.addSlide },
+						' Powerpoint '
+					),
+					React.createElement(
+						'div',
+						{ className: 'all-type-slides' },
+						React.createElement(TitleSlide, null),
+						React.createElement(ContentSlide, null),
+						React.createElement(ImageSlide, null)
+					)
 				),
 				React.createElement(
 					'div',
-					{ className: 'all-type-slides' },
-					React.createElement(TitleSlide, null),
-					React.createElement(ContentSlide, null),
-					React.createElement(ImageSlide, null)
+					null,
+					this.props.allOverviewSlides
 				)
 			);
 		}
 	});
 
-	ReactDOM.render(React.createElement(Slides, null), document.getElementById('type-of-slides'));
+	ReactDOM.render(React.createElement(Slides, { data: storedSlides }), document.getElementById('type-of-slides'));
 
 	//overviewSlide
 	var OverviewTitleSlide = React.createClass({
@@ -234,25 +246,39 @@
 
 		getInitialState: function getInitialState() {
 			return {
-				data: slidesInfo,
 				deleteSlide: ''
 			};
 		},
 
-		deleteSlide: function deleteSlide() {
-			var slideToDelete = document.getElementsByClassName('overview-slide-title')[0];
-			slideToDelete.className = 'display-none';
-		},
+		//deleteSlide: function (id) {
+		// 	var slideToDelete = document.getElementsByClassName('overview-slide-title')[0];
+		// 	slideToDelete.className = 'display-none';
+
+		// console.log(this.props.data);
+
+		// var newStoredSlides = this.props.data.slice();	//copy array
+		//  newStoredSlides.push(id, 1);
+		//  console.log(newStoredSlides);
+		//  this.setState({data: newStoredSlides});
+
+		//  console.log(this.props.data);
+		//},
 		render: function render() {
 			return React.createElement(
 				'div',
 				{ className: 'overview-slide-title' },
 				React.createElement(
 					'button',
-					{ onClick: this.deleteSlide },
+					null,
 					' x '
 				),
-				React.createElement('input', { defaultValue: this.props.content })
+				React.createElement(
+					'p',
+					null,
+					'  ',
+					this.props.title,
+					' '
+				)
 			);
 		}
 	});
@@ -262,7 +288,6 @@
 
 		getInitialState: function getInitialState() {
 			return {
-				data: slidesInfo,
 				deleteSlide: ''
 			};
 		},
@@ -284,11 +309,18 @@
 					{ onClick: this.deleteSlide },
 					' x '
 				),
-				React.createElement('input', null),
 				React.createElement(
-					'textarea',
-					{ name: 'description' },
-					'  '
+					'p',
+					null,
+					' ',
+					this.props.title,
+					' '
+				),
+				React.createElement(
+					'p',
+					{ className: 'overview-slide-textarea' },
+					' ',
+					this.props.content
 				)
 			);
 		}
@@ -300,15 +332,14 @@
 
 		getInitialState: function getInitialState() {
 			return {
-				data: slidesInfo,
 				deleteSlide: ''
 			};
 		},
 
 		deleteSlide: function deleteSlide() {
-			// console.log(event);
-			// var value = event.target;
-			// console.log('value: ' + value);
+			console.log(event);
+			var value = event;
+			console.log('value: ' + value);
 
 			var slideToDelete = document.getElementsByClassName('overview-slide-image')[0];
 			slideToDelete.className = 'display-none';
@@ -323,8 +354,13 @@
 					{ onClick: this.deleteSlide },
 					' x '
 				),
-				React.createElement('input', null),
-				React.createElement('img', { src: 'http://ict-rev.ecml.at/Portals/1/images/Inventory/Powerpoint.png' })
+				React.createElement(
+					'p',
+					{ className: 'overview-slide-input' },
+					' ',
+					this.props.title
+				),
+				React.createElement('img', { src: this.props.content })
 			);
 		}
 	});
@@ -336,15 +372,30 @@
 		selectSlide: function selectSlide() {
 			alert('');
 		},
+
+		deleteSlide: function deleteSlide(id) {
+			var slideToDelete = document.getElementsByClassName('overview-slide-title')[0];
+			slideToDelete.className = 'display-none';
+
+			console.log(this.props.data);
+
+			var newStoredSlides = this.props.data.slice(); //copy array
+			newStoredSlides.push(id, 1);
+			console.log(newStoredSlides);
+			this.setState({ data: newStoredSlides });
+
+			console.log(this.props.data);
+		},
+
 		render: function render() {
 
 			var allOverviewSlides = this.props.data.map(function (slide) {
 				if (slide.type === 'Title') {
-					return React.createElement(OverviewTitleSlide, { key: slide.key, content: slide.content });
+					return React.createElement(OverviewTitleSlide, { key: slide.id, title: slide.title });
 				} else if (slide.type === 'Content') {
-					return React.createElement(OverviewContentSlide, { key: slide.key });
+					return React.createElement(OverviewContentSlide, { key: slide.id, title: slide.title, content: slide.content });
 				} else {
-					return React.createElement(OverviewImageSlide, { key: slide.key });
+					return React.createElement(OverviewImageSlide, { key: slide.id, title: slide.title, content: slide.content });
 				}
 			});
 
@@ -366,7 +417,6 @@
 
 		getInitialState: function getInitialState() {
 			return {
-				data: slidesInfo,
 				addSlideInfo: ''
 			};
 		},
@@ -386,6 +436,58 @@
 		}
 	});
 
+	var DetailsContentSlide = React.createClass({
+		displayName: 'DetailsContentSlide',
+
+
+		getInitialState: function getInitialState() {
+			return {
+				addSlideInfo: ''
+			};
+		},
+
+		addSlideInfo: function addSlideInfo() {
+			// var inputTitle = {this.props.title};
+			// var inputTitle = document.getElementsByTagName('input').value;
+			console.log(inputTitle);
+		},
+
+		render: function render() {
+			return React.createElement(
+				'div',
+				{ onClick: this.addSlideInfo, className: 'detail-content-slide' },
+				React.createElement('input', { placeholder: 'Enter title' }),
+				React.createElement('textarea', { placeholder: 'Enter content' })
+			);
+		}
+	});
+
+	var DetailsImageSlide = React.createClass({
+		displayName: 'DetailsImageSlide',
+
+
+		getInitialState: function getInitialState() {
+			return {
+				addSlideInfo: ''
+			};
+		},
+
+		addSlideInfo: function addSlideInfo() {
+			// var inputTitle = {this.props.title};
+			// var inputTitle = document.getElementsByTagName('input').value;
+			console.log(inputTitle);
+		},
+
+		render: function render() {
+			return React.createElement(
+				'div',
+				{ onClick: this.addSlideInfo, className: 'detail-content-slide' },
+				React.createElement('input', { placeholder: 'Enter title' }),
+				React.createElement('img', { src: '' })
+			);
+		}
+	});
+
 	var DetailsSlides = React.createClass({
 		displayName: 'DetailsSlides',
 
@@ -395,12 +497,12 @@
 			return React.createElement(
 				'div',
 				null,
-				React.createElement(DetailsTitleSlide, null)
+				React.createElement(DetailsContentSlide, null)
 			);
 		}
 	});
 
-	ReactDOM.render(React.createElement(DetailsSlides, { data: slidesInfo }), document.getElementById('detail-slides'));
+	ReactDOM.render(React.createElement(DetailsSlides, null), document.getElementById('detail-slides'));
 
 /***/ },
 /* 2 */
@@ -20359,6 +20461,126 @@
 
 /***/ },
 /* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(168);
+
+/***/ },
+/* 168 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule update
+	 */
+
+	/* global hasOwnProperty:true */
+
+	'use strict';
+
+	var _assign = __webpack_require__(5);
+
+	var keyOf = __webpack_require__(26);
+	var invariant = __webpack_require__(8);
+	var hasOwnProperty = {}.hasOwnProperty;
+
+	function shallowCopy(x) {
+	  if (Array.isArray(x)) {
+	    return x.concat();
+	  } else if (x && typeof x === 'object') {
+	    return _assign(new x.constructor(), x);
+	  } else {
+	    return x;
+	  }
+	}
+
+	var COMMAND_PUSH = keyOf({ $push: null });
+	var COMMAND_UNSHIFT = keyOf({ $unshift: null });
+	var COMMAND_SPLICE = keyOf({ $splice: null });
+	var COMMAND_SET = keyOf({ $set: null });
+	var COMMAND_MERGE = keyOf({ $merge: null });
+	var COMMAND_APPLY = keyOf({ $apply: null });
+
+	var ALL_COMMANDS_LIST = [COMMAND_PUSH, COMMAND_UNSHIFT, COMMAND_SPLICE, COMMAND_SET, COMMAND_MERGE, COMMAND_APPLY];
+
+	var ALL_COMMANDS_SET = {};
+
+	ALL_COMMANDS_LIST.forEach(function (command) {
+	  ALL_COMMANDS_SET[command] = true;
+	});
+
+	function invariantArrayCase(value, spec, command) {
+	  !Array.isArray(value) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected target of %s to be an array; got %s.', command, value) : invariant(false) : void 0;
+	  var specValue = spec[command];
+	  !Array.isArray(specValue) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be an array; got %s. ' + 'Did you forget to wrap your parameter in an array?', command, specValue) : invariant(false) : void 0;
+	}
+
+	function update(value, spec) {
+	  !(typeof spec === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): You provided a key path to update() that did not contain one ' + 'of %s. Did you forget to include {%s: ...}?', ALL_COMMANDS_LIST.join(', '), COMMAND_SET) : invariant(false) : void 0;
+
+	  if (hasOwnProperty.call(spec, COMMAND_SET)) {
+	    !(Object.keys(spec).length === 1) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Cannot have more than one key in an object with %s', COMMAND_SET) : invariant(false) : void 0;
+
+	    return spec[COMMAND_SET];
+	  }
+
+	  var nextValue = shallowCopy(value);
+
+	  if (hasOwnProperty.call(spec, COMMAND_MERGE)) {
+	    var mergeObj = spec[COMMAND_MERGE];
+	    !(mergeObj && typeof mergeObj === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): %s expects a spec of type \'object\'; got %s', COMMAND_MERGE, mergeObj) : invariant(false) : void 0;
+	    !(nextValue && typeof nextValue === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): %s expects a target of type \'object\'; got %s', COMMAND_MERGE, nextValue) : invariant(false) : void 0;
+	    _assign(nextValue, spec[COMMAND_MERGE]);
+	  }
+
+	  if (hasOwnProperty.call(spec, COMMAND_PUSH)) {
+	    invariantArrayCase(value, spec, COMMAND_PUSH);
+	    spec[COMMAND_PUSH].forEach(function (item) {
+	      nextValue.push(item);
+	    });
+	  }
+
+	  if (hasOwnProperty.call(spec, COMMAND_UNSHIFT)) {
+	    invariantArrayCase(value, spec, COMMAND_UNSHIFT);
+	    spec[COMMAND_UNSHIFT].forEach(function (item) {
+	      nextValue.unshift(item);
+	    });
+	  }
+
+	  if (hasOwnProperty.call(spec, COMMAND_SPLICE)) {
+	    !Array.isArray(value) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Expected %s target to be an array; got %s', COMMAND_SPLICE, value) : invariant(false) : void 0;
+	    !Array.isArray(spec[COMMAND_SPLICE]) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be an array of arrays; got %s. ' + 'Did you forget to wrap your parameters in an array?', COMMAND_SPLICE, spec[COMMAND_SPLICE]) : invariant(false) : void 0;
+	    spec[COMMAND_SPLICE].forEach(function (args) {
+	      !Array.isArray(args) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be an array of arrays; got %s. ' + 'Did you forget to wrap your parameters in an array?', COMMAND_SPLICE, spec[COMMAND_SPLICE]) : invariant(false) : void 0;
+	      nextValue.splice.apply(nextValue, args);
+	    });
+	  }
+
+	  if (hasOwnProperty.call(spec, COMMAND_APPLY)) {
+	    !(typeof spec[COMMAND_APPLY] === 'function') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be a function; got %s.', COMMAND_APPLY, spec[COMMAND_APPLY]) : invariant(false) : void 0;
+	    nextValue = spec[COMMAND_APPLY](nextValue);
+	  }
+
+	  for (var k in spec) {
+	    if (!(ALL_COMMANDS_SET.hasOwnProperty(k) && ALL_COMMANDS_SET[k])) {
+	      nextValue[k] = update(value[k], spec[k]);
+	    }
+	  }
+
+	  return nextValue;
+	}
+
+	module.exports = update;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 169 */
 /***/ function(module, exports) {
 
 	// function greet(name: string) {
@@ -20402,16 +20624,16 @@
 
 
 /***/ },
-/* 168 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(169);
+	var content = __webpack_require__(171);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(171)(content, {});
+	var update = __webpack_require__(173)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -20428,21 +20650,21 @@
 	}
 
 /***/ },
-/* 169 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(170)();
+	exports = module.exports = __webpack_require__(172)();
 	// imports
 
 
 	// module
-	exports.push([module.id, ".display-none {\n  display: none; }\n\nbody {\n  margin: 0;\n  background-color: #f2efe8; }\n\n.content {\n  display: flex;\n  width: 800px;\n  height: 800px; }\n\n.site-name {\n  margin: 0;\n  color: #f2efe8;\n  text-align: center;\n  background-color: #b0aac2;\n  padding: 10px 0; }\n\n#type-of-slides {\n  background-color: #dbe9d8;\n  width: 100%;\n  height: 160px;\n  display: inline-block; }\n\n.all-type-slides {\n  padding-top: 10px; }\n\n.type-slide, .type-title, .type-content, .type-img {\n  background-color: #c2d4d8;\n  width: 100px;\n  height: 80px;\n  margin: 0 auto; }\n  .type-slide p, .type-title p, .type-content p, .type-img p {\n    width: 80px;\n    margin-top: 10px;\n    margin-left: 8px;\n    text-align: center;\n    color: #334431;\n    background-color: white; }\n\n.type-title {\n  float: left;\n  margin-left: 30px; }\n\n.type-content {\n  margin-top: -10px; }\n  .type-content textarea {\n    width: 80px;\n    margin-top: 10px;\n    margin-left: 8px;\n    height: 20px;\n    text-align: center; }\n\n.type-img {\n  margin-top: -80px;\n  float: right;\n  margin-right: 30px; }\n  .type-img .slide-img {\n    width: 84px;\n    margin-left: 8px;\n    margin-top: 5px;\n    height: 30px;\n    background-color: white; }\n\n.text-img {\n  margin-top: 30px;\n  height: 70px;\n  margin-left: 25px;\n  width: 180px; }\n  .text-img:focus {\n    outline: none; }\n\n.slide-box, .overview-slide-title, .overview-slide-content, .overview-slide-image {\n  background-color: #dbe9d8;\n  margin-left: 10px;\n  width: 180px;\n  height: 180px; }\n\n.button, .overview-slide-title button, .overview-slide-content button, .overview-slide-image button {\n  background: #900;\n  border: none;\n  color: white;\n  float: right;\n  margin-top: 5px;\n  margin-right: 5px; }\n\n.input, .overview-slide-title input, .overview-slide-content input, .overview-slide-image input {\n  margin-top: 40px;\n  width: 150px;\n  height: 25px;\n  margin-left: 12px;\n  border: 1px solid #e05038; }\n  .input:focus, .overview-slide-title input:focus, .overview-slide-content input:focus, .overview-slide-image input:focus {\n    outline: none; }\n\n.textarea, .overview-slide-content textarea {\n  margin-top: 20px;\n  width: 150px;\n  height: 55px;\n  margin-left: 12px;\n  border: 1px solid #e05038;\n  font-size: 20px;\n  text-align: center; }\n  .textarea:focus, .overview-slide-content textarea:focus {\n    outline: none; }\n\n.image, .overview-slide-image img {\n  margin-top: 20px;\n  width: 150px;\n  height: 55px;\n  margin-left: 12px; }\n\n#overview-slides {\n  background-color: #c2d4d8;\n  height: 790px;\n  width: 200px;\n  padding-top: 20px; }\n\n.overview-slide-title {\n  margin-top: 20px; }\n\n.overview-slide-content {\n  margin-top: 20px; }\n\n.overview-slide-image {\n  margin-top: 20px; }\n  .overview-slide-image img {\n    border: 1px solid #e05038; }\n\n#detail-slides {\n  width: 50%;\n  height: 50%;\n  background-color: #D8D8D8;\n  margin-top: 40px;\n  margin-left: 40px; }\n\n.detail-title-slide input {\n  width: 300px;\n  height: 50px;\n  margin-top: 150px;\n  margin-left: 50px;\n  font-size: 20px;\n  text-align: center;\n  border: none; }\n  .detail-title-slide input:focus {\n    outline: none; }\n", ""]);
+	exports.push([module.id, ".display-none {\n  display: none; }\n\nbody {\n  margin: 0;\n  background-color: #f2efe8; }\n\n.content {\n  display: flex;\n  width: 800px;\n  height: 800px; }\n\n.site-name {\n  margin: 0;\n  color: #f2efe8;\n  text-align: center;\n  background-color: #b0aac2;\n  padding: 10px 0; }\n\n#type-of-slides {\n  background-color: #dbe9d8;\n  width: 100%;\n  height: 160px;\n  display: inline-block; }\n\n.all-type-slides {\n  padding-top: 10px; }\n\n.type-slide, .type-title, .type-content, .type-img {\n  background-color: #c2d4d8;\n  width: 100px;\n  height: 80px;\n  margin: 0 auto;\n  cursor: pointer; }\n  .type-slide p, .type-title p, .type-content p, .type-img p {\n    width: 80px;\n    margin-top: 10px;\n    margin-left: 8px;\n    text-align: center;\n    color: #334431;\n    background-color: white; }\n\n.type-title {\n  float: left;\n  margin-left: 30px; }\n\n.type-content {\n  margin-top: -10px; }\n  .type-content textarea {\n    width: 80px;\n    margin-top: 10px;\n    margin-left: 8px;\n    height: 20px;\n    text-align: center; }\n\n.type-img {\n  margin-top: -80px;\n  float: right;\n  margin-right: 30px; }\n  .type-img .slide-img {\n    width: 84px;\n    margin-left: 8px;\n    margin-top: 5px;\n    height: 30px;\n    background-color: white; }\n\n.text-img {\n  margin-top: 30px;\n  height: 70px;\n  margin-left: 25px;\n  width: 180px; }\n  .text-img:focus {\n    outline: none; }\n\n.slide-box, .overview-slide-title, .overview-slide-content, .overview-slide-image {\n  background-color: #dbe9d8;\n  margin-left: 10px;\n  padding-top: 40px;\n  width: 180px;\n  height: 140px; }\n\n.button, .overview-slide-title button, .overview-slide-content button, .overview-slide-image button {\n  background: #900;\n  border: none;\n  color: white;\n  float: right;\n  margin-top: -35px;\n  margin-right: 5px;\n  cursor: pointer; }\n\n.overview-slide-input, .overview-slide-title p, .overview-slide-content p {\n  width: 150px;\n  height: 25px;\n  margin-left: 12px;\n  border: 1px solid #e05038;\n  text-align: center;\n  padding-top: 4px; }\n\n.overview-slide-textarea, .overview-slide-content .overview-slide-textarea {\n  margin-top: 20px;\n  width: 150px;\n  height: 55px;\n  margin-left: 12px;\n  border: 1px solid #e05038;\n  font-size: 20px;\n  text-align: center; }\n\n.image, .overview-slide-image img {\n  width: 150px;\n  height: 55px;\n  margin-left: 12px; }\n\n#overview-slides {\n  background-color: #c2d4d8;\n  height: 790px;\n  width: 230px;\n  padding-top: 20px;\n  overflow-y: scroll; }\n\n.overview-slide-title {\n  margin-top: 20px; }\n\n.overview-slide-content {\n  margin-top: 20px; }\n\n.overview-slide-image {\n  margin-top: 20px; }\n  .overview-slide-image img {\n    border: 1px solid #e05038; }\n\n#detail-slides {\n  width: 50%;\n  height: 50%;\n  background-color: #D8D8D8;\n  margin-top: 40px;\n  margin-left: 40px; }\n\n.detail-title-slide input {\n  width: 300px;\n  height: 50px;\n  margin-top: 150px;\n  margin-left: 50px;\n  font-size: 20px;\n  text-align: center;\n  border: none; }\n  .detail-title-slide input:focus {\n    outline: none; }\n\n.detail-content-slide input {\n  width: 300px;\n  height: 50px;\n  margin-top: 100px;\n  margin-left: 50px;\n  font-size: 20px;\n  text-align: center;\n  border: none;\n  font-family: Arial; }\n  .detail-content-slide input:focus {\n    outline: none; }\n\n.detail-content-slide textarea {\n  width: 300px;\n  height: 150px;\n  margin-top: 40px;\n  margin-left: 50px;\n  font-size: 20px;\n  text-align: center;\n  border: none;\n  font-family: Arial;\n  padding-top: 30px; }\n  .detail-content-slide textarea:focus {\n    outline: none; }\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 170 */
+/* 172 */
 /***/ function(module, exports) {
 
 	/*
@@ -20498,7 +20720,7 @@
 
 
 /***/ },
-/* 171 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
