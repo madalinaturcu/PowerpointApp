@@ -16,7 +16,6 @@ var TitleSlide = React.createClass ({
 		);
 	}
 });
-//ReactDOM.render(<OverviewSlides data={storedSlides}/>, document.getElementById('overview-slides'));
 
 var ContentSlide = React.createClass ({
 
@@ -164,7 +163,7 @@ var OverviewSlides = React.createClass ({
 			if(slide.type === 'Content') {
 				return(<OverviewContentSlide key = {slide.id} id={slide.id} title = {slide.title} content = {slide.content} select={that.props.selectSlide} deleteS={that.props.deleteSlide} /> );
 			} else {
-				return(<OverviewImageSlide key = {slide.id} id={slide.id} title = {slide.title} image = {slide.content} select={that.props.selectSlide} deleteS={that.props.deleteSlide}/> );
+				return(<OverviewImageSlide key = {slide.id} id={slide.id} title = {slide.title} image = {slide.image} select={that.props.selectSlide} deleteS={that.props.deleteSlide}/> );
 			}
 		});
 
@@ -183,18 +182,21 @@ var OverviewSlides = React.createClass ({
 var DetailsTitleSlide = React.createClass ({
 
 	getInitialState: function () {
-	    return {title: this.props.slide.title, id: this.props.slide.id};
+	    return {
+	    	title: this.props.slide.title, 
+	    	id: this.props.slide.id
+	    };
 	},
 
-	handleChange: function(event){
+	handleTitleChange: function(event){
 		this.setState({title: event.target.value});
-		this.props.editSlide(this.state);
+		this.props.editSlide({title: event.target.value, id: this.state.id});
 	},
 
 	render: function () {
 		return (
 			<div className="detail-title-slide">
-				<input placeholder="Enter title" value={this.state.title} onChange={this.handleChange} />
+				<input placeholder="Enter title" value={this.state.title} onChange={this.handleTitleChange} />
 			</div>
 		);
 	}
@@ -210,17 +212,20 @@ var DetailsContentSlide = React.createClass ({
 	    };
 	},
 
-	handleChange: function(event){
-		this.setState({title: event.target.value, content: event.target.value});
-		this.props.editSlide(this.state);
+	handleTitleChange: function(event){
+		this.setState({title: event.target.value});
+		this.props.editSlide({title: event.target.value, id: this.state.id});
 	},
-
+	handleContentChange: function(event) {
+		this.setState({content: event.target.value});
+		this.props.editSlide({content: event.target.value, id: this.state.id});
+	},
 
 	render: function () {
 		return (
 			<div className="detail-content-slide" >
-				<input placeholder="Enter title" onChange={this.handleChange}/>
-				<textarea placeholder="Enter content" onChange={this.handleChange}/>
+				<input placeholder="Enter title" value={this.state.title} onChange={this.handleTitleChange}/>
+				<textarea placeholder="Enter content" value={this.state.content} onChange={this.handleContentChange}/>
 			</div>
 		);
 	}
@@ -230,21 +235,27 @@ var DetailsImageSlide = React.createClass ({
 
 	getInitialState: function () {
 	    return {
-	    	addSlideInfo: ''      
+	    	title: this.props.slide.title, 
+	    	image: this.props.slide.image, 
+	    	id: this.props.slide.id
 	    };
 	},
 
-	addSlideInfo: function () {
-		// var inputTitle = {this.props.title};
-		// var inputTitle = document.getElementsByTagName('input').value;
-		console.log(inputTitle);
+	handleTitleChange: function(event){
+		this.setState({title: event.target.value});
+		this.props.editSlide({title: event.target.value, id: this.state.id});
+	},
+	handleImageChange: function(event) {
+		this.setState({image: event.target.value});
+		this.props.editSlide({image: event.target.value, id: this.state.id});
 	},
 
 	render: function () {
 		return (
 			<div className="detail-content-slide">
-				<input placeholder="Enter title"/>
-				<img src='' />
+				<input placeholder="Enter title here"  value={this.state.title} onChange={this.handleTitleChange} />
+				<input placeholder="Enter image link here" value={this.state.image} onChange={this.handleImageChange} />
+				<img src={this.state.image}/>
 			</div>
 		);
 	}
@@ -280,31 +291,36 @@ var DetailsSlides = React.createClass ({
 var App = React.createClass ({
 
 	getInitialState: function() {
-		return {
-			data: [
-				{
-					id: 1,
-					type: 'Title',
-					title : 'Title1'
-				},
-				{
-					id: 2,
-					type: 'Content',
-					title : 'Title2',
-					content: 'Content'
-				},
-				{
-					id: 3,
-					type: 'Image',
-					title : 'Title3',
-					content: 'https://exbabylon.com/sites/all/themes/goodnex_sub/images/partners/microsoft.png'
-				}
-			],
-			selectedSlide: {},
-			deletedSlide: {}
-		};
+		if(localStorage.state) {
+			return JSON.parse(localStorage.state);
+		} else {
+			return {
+				data: [
+					{
+						id: 1,
+						type: 'Title',
+						title : 'Title1'
+					},
+					{
+						id: 2,
+						type: 'Content',
+						title : 'Title2',
+						content: 'Content'
+					},
+					{
+						id: 3,
+						type: 'Image',
+						title : 'Title3',
+						image: 'https://exbabylon.com/sites/all/themes/goodnex_sub/images/partners/microsoft.png'
+					}
+				],
+				selectedSlide: {},
+			};
+		}	
+	},	
+	componentDidUpdate: function() {
+    	localStorage.state = JSON.stringify(this.state);
 	},
-
 	addNewSlide: function(slideType) {
 		this.state.data.push(slideType);
 		this.setState({data: this.state.data});
@@ -320,18 +336,13 @@ var App = React.createClass ({
 	},
 
 	deleteSlide: function(slideId){
-		console.log(slideId);
-		console.log(this.state.data);
+		confirm("Are you sure?");
 		for(var i = 0; i < this.state.data.length; i++){
-				if(this.state.data[i].id === slideId){
-				//slideId = slideId -1;
-				this.state.data.splice(slideId, 1);
-
-				console.log(this.state.data);
+				if(this.state.data[i].id === slideId) {
+				this.state.data.splice(i, 1);
 			}
 		}
-		 this.setState({deleteSlide: this.state.data})
-		 console.log(this.state.data);
+		this.setState({data: this.state.data});
 	},
 
 	editSlide: function(editedSlide){
@@ -342,12 +353,18 @@ var App = React.createClass ({
 				}
 			}
 
-			this.state.data[positionInArray].title = editedSlide.title;
-			this.state.data[positionInArray].content = editedSlide.content;
+			if(editedSlide.title){
+				this.state.data[positionInArray].title = editedSlide.title;
+			}
+
+			if(editedSlide.content){
+				this.state.data[positionInArray].content = editedSlide.content;
+			}
+
+			if(editedSlide.image){
+				this.state.data[positionInArray].image = editedSlide.image;
+			}
 			this.setState({data: this.state.data});
-			// sa schimb obiectul din array
-			// care are id-ul egal cu editedSlide.id
-			// this.state.data[x] = editedSlide
 	},
 	render: function() {
 		return (
