@@ -171,7 +171,7 @@ body {
 	width: 150px;
   height: 25px;
   margin-left: 12px;
-  border: 1px solid $color-red;
+  border: 1px solid $color-purple;
   text-align: center;
   padding-top: 4px;
 }
@@ -181,13 +181,12 @@ body {
 	width: 150px;
   height: 55px;
   margin-left: 12px;
-  border: 1px solid $color-red;
-  font-size: 20px;
+  border: 1px solid $color-purple;
+  font-size: 15px;
   text-align: center;
 }
 
 .image {
-
 	width: 150px;
   height: 55px;
   margin-left: 12px;
@@ -195,7 +194,7 @@ body {
 
 #overview-slides {
 	background-color: $color-blue;
-	height: 790px;
+	height: 765px;
 	width: 230px;
 	padding-top: 20px;
 	overflow-y: scroll;
@@ -238,56 +237,56 @@ body {
 	}
 	img {
 		@extend .image;
-		border: 1px solid $color-red;
+		border: 1px solid $color-purple;
 	}
 }
 
 #detail-slides {
-	width: 50%;
-	height: 50%;
+	width: 80%;
+	height: 700px;
 	background-color: #D8D8D8;
 	margin-top: 40px;
 	margin-left: 40px;
 
 }
 
+input {
+  width: 80%;
+  height: 78px;
+  margin-top: 50px;
+  margin-left: 9%;
+  font-size: 20px;
+  text-align: center;
+  border-radius: 25px;
+  border: none;
+
+  &:focus {
+  	outline: none;
+  	}
+}
+
 .detail-title-slide {
-	input {
-		width: 300px;
-		height: 50px;
-		margin-top: 150px;
-		margin-left: 50px;
-		font-size: 20px;
-  	text-align: center;
-  	border: none;
+	@extend input;
 
   	&:focus {
   	outline: none;
   	}
-	}
+	
 }
 
 .detail-content-slide {
-	input {
-		width: 300px;
-		height: 50px;
-		margin-top: 100px;
-		margin-left: 50px;
-		font-size: 20px;
-  	text-align: center;
-  	border: none;
-  	font-family: Arial;
+	@extend input;
 
   	&:focus {
   	outline: none;
   	}
-	}
+	
 
 	textarea {
-		width: 300px;
-		height: 150px;
+		width: 80%;
+		height: 300px;
 		margin-top: 40px;
-		margin-left: 50px;
+		margin-left: 9%;
 		font-size: 20px;
   	text-align: center;
   	border: none;

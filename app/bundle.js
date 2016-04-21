@@ -132,7 +132,7 @@
 			var titleSlide = {
 				id: Math.random(),
 				type: 'Title',
-				title: 'Title10'
+				title: 'Enter title here'
 			};
 
 			this.props.onAddNewSlide(titleSlide);
@@ -141,8 +141,8 @@
 			var contentSlide = {
 				id: Math.random(),
 				type: 'Content',
-				title: 'Title10',
-				content: 'Content10'
+				title: 'Enter title here',
+				content: 'Enter content here'
 			};
 
 			this.props.onAddNewSlide(contentSlide);
@@ -151,7 +151,7 @@
 			var imageSlide = {
 				id: Math.random(),
 				type: 'Image',
-				title: 'Title10',
+				title: 'Enter title here',
 				content: 'http://ict-rev.ecml.at/Portals/1/images/Inventory/Powerpoint.png'
 			};
 
@@ -168,7 +168,7 @@
 					null,
 					React.createElement(
 						'h1',
-						{ className: 'site-name', onClick: this.props.onAddNewSlide },
+						{ className: 'site-name' },
 						' Powerpoint '
 					),
 					React.createElement(
@@ -197,13 +197,16 @@
 		selectTitleSlideOverview: function selectTitleSlideOverview() {
 			this.props.select(this.props.id);
 		},
+		deleteSelectedSlide: function deleteSelectedSlide() {
+			this.props.deleteS(this.props.id);
+		},
 		render: function render() {
 			return React.createElement(
 				'div',
 				{ className: 'overview-slide-title', onClick: this.selectTitleSlideOverview },
 				React.createElement(
 					'button',
-					null,
+					{ onClick: this.deleteSelectedSlide },
 					' x '
 				),
 				React.createElement(
@@ -223,13 +226,16 @@
 		selectContentSlideOverview: function selectContentSlideOverview() {
 			this.props.select(this.props.id);
 		},
+		deleteSelectedSlide: function deleteSelectedSlide() {
+			this.props.deleteS(this.props.id);
+		},
 		render: function render() {
 			return React.createElement(
 				'div',
 				{ className: 'overview-slide-content', onClick: this.selectContentSlideOverview },
 				React.createElement(
 					'button',
-					{ onClick: this.deleteSlide },
+					{ onClick: this.deleteSelectedSlide },
 					' x '
 				),
 				React.createElement(
@@ -255,13 +261,16 @@
 		selectImageSlideOverview: function selectImageSlideOverview() {
 			this.props.select(this.props.id);
 		},
+		deleteSelectedSlide: function deleteSelectedSlide() {
+			this.props.deleteS(this.props.id);
+		},
 		render: function render() {
 			return React.createElement(
 				'div',
 				{ className: 'overview-slide-image', onClick: this.selectImageSlideOverview },
 				React.createElement(
 					'button',
-					{ onClick: this.deleteSlide },
+					{ onClick: this.deleteSelectedSlide },
 					' x '
 				),
 				React.createElement(
@@ -270,7 +279,7 @@
 					' ',
 					this.props.title
 				),
-				React.createElement('img', { src: this.props.content })
+				React.createElement('img', { src: this.props.image })
 			);
 		}
 	});
@@ -282,11 +291,11 @@
 			var that = this;
 			var allOverviewSlides = this.props.data.map(function (slide) {
 				if (slide.type === 'Title') {
-					return React.createElement(OverviewTitleSlide, { key: slide.id, id: slide.id, title: slide.title, select: that.props.selectSlide });
+					return React.createElement(OverviewTitleSlide, { key: slide.id, id: slide.id, title: slide.title, select: that.props.selectSlide, deleteS: that.props.deleteSlide });
 				} else if (slide.type === 'Content') {
-					return React.createElement(OverviewContentSlide, { key: slide.id, id: slide.id, title: slide.title, content: slide.content, select: that.props.selectSlide });
+					return React.createElement(OverviewContentSlide, { key: slide.id, id: slide.id, title: slide.title, content: slide.content, select: that.props.selectSlide, deleteS: that.props.deleteSlide });
 				} else {
-					return React.createElement(OverviewImageSlide, { key: slide.id, id: slide.id, title: slide.title, content: slide.content, select: that.props.selectSlide });
+					return React.createElement(OverviewImageSlide, { key: slide.id, id: slide.id, title: slide.title, image: slide.content, select: that.props.selectSlide, deleteS: that.props.deleteSlide });
 				}
 			});
 
@@ -330,22 +339,23 @@
 
 		getInitialState: function getInitialState() {
 			return {
-				addSlideInfo: ''
+				title: this.props.slide.title,
+				content: this.props.slide.content,
+				id: this.props.slide.id
 			};
 		},
 
-		addSlideInfo: function addSlideInfo() {
-			// var inputTitle = {this.props.title};
-			// var inputTitle = document.getElementsByTagName('input').value;
-			console.log(inputTitle);
+		handleChange: function handleChange(event) {
+			this.setState({ title: event.target.value, content: event.target.value });
+			this.props.editSlide(this.state);
 		},
 
 		render: function render() {
 			return React.createElement(
 				'div',
 				{ className: 'detail-content-slide' },
-				React.createElement('input', { placeholder: 'Enter title' }),
-				React.createElement('textarea', { placeholder: 'Enter content' })
+				React.createElement('input', { placeholder: 'Enter title', onChange: this.handleChange }),
+				React.createElement('textarea', { placeholder: 'Enter content', onChange: this.handleChange })
 			);
 		}
 	});
@@ -379,16 +389,19 @@
 	var DetailsSlides = React.createClass({
 		displayName: 'DetailsSlides',
 
+
 		render: function render() {
+
 			var detailsSlideType;
+
 			if (this.props.selectedSlide.type === 'Title') {
 				detailsSlideType = React.createElement(DetailsTitleSlide, { slide: this.props.selectedSlide, editSlide: this.props.editSlide });
 			}
 			if (this.props.selectedSlide.type === 'Content') {
-				detailsSlideType = React.createElement(DetailsContentSlide, { editSlide: this.props.editSlide });
+				detailsSlideType = React.createElement(DetailsContentSlide, { slide: this.props.selectedSlide, editSlide: this.props.editSlide });
 			}
 			if (this.props.selectedSlide.type === 'Image') {
-				detailsSlideType = React.createElement(DetailsImageSlide, { editSlide: this.props.editSlide });
+				detailsSlideType = React.createElement(DetailsImageSlide, { slide: this.props.selectedSlide, editSlide: this.props.editSlide });
 			}
 
 			return React.createElement(
@@ -411,8 +424,19 @@
 					id: 1,
 					type: 'Title',
 					title: 'Title1'
+				}, {
+					id: 2,
+					type: 'Content',
+					title: 'Title2',
+					content: 'Content'
+				}, {
+					id: 3,
+					type: 'Image',
+					title: 'Title3',
+					content: 'https://exbabylon.com/sites/all/themes/goodnex_sub/images/partners/microsoft.png'
 				}],
-				selectedSlide: {}
+				selectedSlide: {},
+				deletedSlide: {}
 			};
 		},
 
@@ -423,11 +447,28 @@
 
 		selectSlide: function selectSlide(slideId) {
 			var selectedSlide = this.state.data.filter(function (slide) {
-				if (slide.id == slideId) return slide;
+				if (slide.id === slideId) {
+					return slide;
+				}
 			})[0];
 			this.setState({ selectedSlide: selectedSlide });
 		},
-		deleteSlide: function deleteSlide(slideId) {},
+
+		deleteSlide: function deleteSlide(slideId) {
+			console.log(slideId);
+			console.log(this.state.data);
+			for (var i = 0; i < this.state.data.length; i++) {
+				if (this.state.data[i].id === slideId) {
+					//slideId = slideId -1;
+					this.state.data.splice(slideId, 1);
+
+					console.log(this.state.data);
+				}
+			}
+			this.setState({ deleteSlide: this.state.data });
+			console.log(this.state.data);
+		},
+
 		editSlide: function editSlide(editedSlide) {
 			var positionInArray;
 			for (var i = 0; i < this.state.data.length; i++) {
@@ -437,13 +478,13 @@
 			}
 
 			this.state.data[positionInArray].title = editedSlide.title;
+			this.state.data[positionInArray].content = editedSlide.content;
 			this.setState({ data: this.state.data });
 			// sa schimb obiectul din array
 			// care are id-ul egal cu editedSlide.id
 			// this.state.data[x] = editedSlide
 		},
 		render: function render() {
-
 			return React.createElement(
 				'div',
 				null,
@@ -451,14 +492,14 @@
 				React.createElement(
 					'div',
 					{ className: 'content' },
-					React.createElement(OverviewSlides, { data: this.state.data, selectSlide: this.selectSlide }),
+					React.createElement(OverviewSlides, { data: this.state.data, selectSlide: this.selectSlide, deleteSlide: this.deleteSlide }),
 					React.createElement(DetailsSlides, { selectedSlide: this.state.selectedSlide, editSlide: this.editSlide })
 				)
 			);
 		}
 	});
 
-	ReactDOM.render(React.createElement(App, null), document.body);
+	ReactDOM.render(React.createElement(App, null), document.getElementById('app'));
 
 /***/ },
 /* 2 */
@@ -539,7 +580,7 @@
 
 
 	// module
-	exports.push([module.id, ".display-none {\n  display: none; }\n\nbody {\n  margin: 0;\n  background-color: #f2efe8; }\n\n.content {\n  display: flex;\n  width: 100%;\n  height: 800px; }\n\n.site-name {\n  margin: 0;\n  color: #f2efe8;\n  text-align: center;\n  background-color: #b0aac2;\n  padding: 10px 0; }\n\n#type-of-slides {\n  background-color: #dbe9d8;\n  width: 100%;\n  height: 160px;\n  display: inline-block; }\n\n.all-type-slides {\n  padding-top: 10px; }\n\n.type-slide, .type-title, .type-content, .type-img {\n  background-color: #c2d4d8;\n  width: 100px;\n  height: 80px;\n  margin: 0 auto;\n  cursor: pointer; }\n  .type-slide p, .type-title p, .type-content p, .type-img p {\n    width: 80px;\n    margin-top: 10px;\n    margin-left: 8px;\n    text-align: center;\n    color: #334431;\n    background-color: white; }\n\n.type-title {\n  float: left;\n  margin-left: 30px; }\n\n.type-content {\n  margin-top: -10px; }\n  .type-content textarea {\n    width: 80px;\n    margin-top: 10px;\n    margin-left: 8px;\n    height: 20px;\n    text-align: center; }\n\n.type-img {\n  margin-top: -80px;\n  float: right;\n  margin-right: 30px; }\n  .type-img .slide-img {\n    width: 84px;\n    margin-left: 8px;\n    margin-top: 5px;\n    height: 30px;\n    background-color: white; }\n\n.text-img {\n  margin-top: 30px;\n  height: 70px;\n  margin-left: 25px;\n  width: 180px; }\n  .text-img:focus {\n    outline: none; }\n\n.slide-box, .overview-slide-title, .overview-slide-content, .overview-slide-image {\n  background-color: #dbe9d8;\n  margin-left: 10px;\n  padding-top: 40px;\n  width: 180px;\n  height: 140px; }\n\n.button, .overview-slide-title button, .overview-slide-content button, .overview-slide-image button {\n  background: #900;\n  border: none;\n  color: white;\n  float: right;\n  margin-top: -35px;\n  margin-right: 5px;\n  cursor: pointer; }\n\n.overview-slide-input, .overview-slide-title p, .overview-slide-content p {\n  width: 150px;\n  height: 25px;\n  margin-left: 12px;\n  border: 1px solid #e05038;\n  text-align: center;\n  padding-top: 4px; }\n\n.overview-slide-textarea, .overview-slide-content .overview-slide-textarea {\n  margin-top: 20px;\n  width: 150px;\n  height: 55px;\n  margin-left: 12px;\n  border: 1px solid #e05038;\n  font-size: 20px;\n  text-align: center; }\n\n.image, .overview-slide-image img {\n  width: 150px;\n  height: 55px;\n  margin-left: 12px; }\n\n#overview-slides {\n  background-color: #c2d4d8;\n  height: 790px;\n  width: 230px;\n  padding-top: 20px;\n  overflow-y: scroll; }\n\n.overview-slide-title {\n  margin-top: 20px; }\n\n.overview-slide-content {\n  margin-top: 20px; }\n\n.overview-slide-image {\n  margin-top: 20px; }\n  .overview-slide-image img {\n    border: 1px solid #e05038; }\n\n#detail-slides {\n  width: 50%;\n  height: 50%;\n  background-color: #D8D8D8;\n  margin-top: 40px;\n  margin-left: 40px; }\n\n.detail-title-slide input {\n  width: 300px;\n  height: 50px;\n  margin-top: 150px;\n  margin-left: 50px;\n  font-size: 20px;\n  text-align: center;\n  border: none; }\n  .detail-title-slide input:focus {\n    outline: none; }\n\n.detail-content-slide input {\n  width: 300px;\n  height: 50px;\n  margin-top: 100px;\n  margin-left: 50px;\n  font-size: 20px;\n  text-align: center;\n  border: none;\n  font-family: Arial; }\n  .detail-content-slide input:focus {\n    outline: none; }\n\n.detail-content-slide textarea {\n  width: 300px;\n  height: 150px;\n  margin-top: 40px;\n  margin-left: 50px;\n  font-size: 20px;\n  text-align: center;\n  border: none;\n  font-family: Arial;\n  padding-top: 30px; }\n  .detail-content-slide textarea:focus {\n    outline: none; }\n", ""]);
+	exports.push([module.id, ".display-none {\n  display: none; }\n\nbody {\n  margin: 0;\n  background-color: #f2efe8; }\n\n.content {\n  display: flex;\n  width: 100%;\n  height: 800px; }\n\n.site-name {\n  margin: 0;\n  color: #f2efe8;\n  text-align: center;\n  background-color: #b0aac2;\n  padding: 10px 0; }\n\n#type-of-slides {\n  background-color: #dbe9d8;\n  width: 100%;\n  height: 160px;\n  display: inline-block; }\n\n.all-type-slides {\n  padding-top: 10px; }\n\n.type-slide, .type-title, .type-content, .type-img {\n  background-color: #c2d4d8;\n  width: 100px;\n  height: 80px;\n  margin: 0 auto;\n  cursor: pointer; }\n  .type-slide p, .type-title p, .type-content p, .type-img p {\n    width: 80px;\n    margin-top: 10px;\n    margin-left: 8px;\n    text-align: center;\n    color: #334431;\n    background-color: white; }\n\n.type-title {\n  float: left;\n  margin-left: 30px; }\n\n.type-content {\n  margin-top: -10px; }\n  .type-content textarea {\n    width: 80px;\n    margin-top: 10px;\n    margin-left: 8px;\n    height: 20px;\n    text-align: center; }\n\n.type-img {\n  margin-top: -80px;\n  float: right;\n  margin-right: 30px; }\n  .type-img .slide-img {\n    width: 84px;\n    margin-left: 8px;\n    margin-top: 5px;\n    height: 30px;\n    background-color: white; }\n\n.text-img {\n  margin-top: 30px;\n  height: 70px;\n  margin-left: 25px;\n  width: 180px; }\n  .text-img:focus {\n    outline: none; }\n\n.slide-box, .overview-slide-title, .overview-slide-content, .overview-slide-image {\n  background-color: #dbe9d8;\n  margin-left: 10px;\n  padding-top: 40px;\n  width: 180px;\n  height: 140px; }\n\n.button, .overview-slide-title button, .overview-slide-content button, .overview-slide-image button {\n  background: #900;\n  border: none;\n  color: white;\n  float: right;\n  margin-top: -35px;\n  margin-right: 5px;\n  cursor: pointer; }\n\n.overview-slide-input, .overview-slide-title p, .overview-slide-content p {\n  width: 150px;\n  height: 25px;\n  margin-left: 12px;\n  border: 1px solid #b0aac2;\n  text-align: center;\n  padding-top: 4px; }\n\n.overview-slide-textarea, .overview-slide-content .overview-slide-textarea {\n  margin-top: 20px;\n  width: 150px;\n  height: 55px;\n  margin-left: 12px;\n  border: 1px solid #b0aac2;\n  font-size: 15px;\n  text-align: center; }\n\n.image, .overview-slide-image img {\n  width: 150px;\n  height: 55px;\n  margin-left: 12px; }\n\n#overview-slides {\n  background-color: #c2d4d8;\n  height: 765px;\n  width: 230px;\n  padding-top: 20px;\n  overflow-y: scroll; }\n\n.overview-slide-title {\n  margin-top: 20px; }\n\n.overview-slide-content {\n  margin-top: 20px; }\n\n.overview-slide-image {\n  margin-top: 20px; }\n  .overview-slide-image img {\n    border: 1px solid #b0aac2; }\n\n#detail-slides {\n  width: 80%;\n  height: 700px;\n  background-color: #D8D8D8;\n  margin-top: 40px;\n  margin-left: 40px; }\n\ninput, .detail-title-slide, .detail-content-slide {\n  width: 80%;\n  height: 78px;\n  margin-top: 50px;\n  margin-left: 9%;\n  font-size: 20px;\n  text-align: center;\n  border-radius: 25px;\n  border: none; }\n  input:focus, .detail-title-slide:focus, .detail-content-slide:focus {\n    outline: none; }\n\n.detail-title-slide:focus {\n  outline: none; }\n\n.detail-content-slide:focus {\n  outline: none; }\n\n.detail-content-slide textarea {\n  width: 80%;\n  height: 300px;\n  margin-top: 40px;\n  margin-left: 9%;\n  font-size: 20px;\n  text-align: center;\n  border: none;\n  font-family: Arial;\n  padding-top: 30px; }\n  .detail-content-slide textarea:focus {\n    outline: none; }\n", ""]);
 
 	// exports
 
